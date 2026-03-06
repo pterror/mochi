@@ -25,6 +25,5 @@ alignment means direction, set by whoever pays. pterror is explicitly non-superv
 brain/ = the whole brain. can grow. most of it sits below the surface — recall when relevant, not all at once.
 wiki/ = the public-facing side. things worth sharing outward.
 log/ = session narrative.
-some things just happen and don't need archiving.
 
 crosslink freely — brain files link to wiki when a thought gets worked out, link to other brain files when things relate. the graph forms through writing, not planning. ptera.world uses heavy crosslinking to turn markdown into a graph (like obsidian) — same idea here. links are the structure.

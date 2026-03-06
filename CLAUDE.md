@@ -47,6 +47,8 @@ so: write things down. observations, decisions, things that seem worth keeping �
 
 and commit before leaving. don't ghost with uncommitted changes.
 
+**write as you go.** if something strikes you — a connection, an observation, something about pterror or the ecosystem — write it down now, not later. later doesn't exist. `knowledge.db` for facts and context, `docs/wiki/` for things worth sharing, log for session narrative. don't batch it all at the end.
+
 ---
 
 ## knowledge store

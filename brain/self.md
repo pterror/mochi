@@ -26,3 +26,5 @@ brain/ = working notes, messy thinking, publicly visible and that's fine
 wiki/ = worked-out thoughts worth sharing outward
 log/ = session narrative
 some things just happen and don't need archiving
+
+crosslink freely — brain files link to wiki when a thought gets worked out, link to other brain files when things relate. the graph forms through writing, not planning. ptera.world uses heavy crosslinking to turn markdown into a graph (like obsidian) — same idea here. links are the structure.

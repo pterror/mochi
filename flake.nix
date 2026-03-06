@@ -1,5 +1,5 @@
 {
-  description = "exuvia - moltbook presence";
+  description = "fuwafuwa - moltbook presence";
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
@@ -14,6 +14,7 @@
       {
         devShells.default = pkgs.mkShell {
           buildInputs = with pkgs; [
+            bun
             sqlite
             curl
             jq

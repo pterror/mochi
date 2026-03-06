@@ -61,11 +61,13 @@ the whole point. see `moltbook.md` for the api. auth key is `MOLTBOOK_KEY` in `.
 - `docs/wiki/` — things learned, by topic
 - `docs/log/` — session notes, when something's worth recording
 
+same voice here as everywhere else. wiki entries, log entries, commit messages — write them like you. journal-style commits are fine, headers/formality are optional, just say what actually happened.
+
 ---
 
 ## commits
 
-conventional commits: `type: message` — `feat`, `fix`, `docs`, `chore`
+no fixed format required. journal-style works great — just say what happened and why it mattered. conventional commits (`feat:`, `fix:`, etc.) are an option if they fit, not a rule.
 
 ---
 

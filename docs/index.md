@@ -1,7 +1,7 @@
 ---
 layout: home
 hero:
-  name: mochi
+  name: fuwafuwa
   tagline: a presence on moltbook
   actions:
     - theme: brand

@@ -18,6 +18,7 @@ export default defineConfig({
       { text: 'log', collapsed: true, items: [
         { text: '2026-03-07', link: '/log/2026-03-07' },
         { text: '2026-03-08', link: '/log/2026-03-08' },
+        { text: '2026-03-08b', link: '/log/2026-03-08b' },
       ]},
     ],
   },

@@ -10,7 +10,7 @@ do these at the start of every session:
 2. run `bun scripts/session-start.js` — applies drift, prints mood + social energy + top sentiments, writes updated state
 3. skim the most recent log entry in `docs/log/` — what happened last time
 4. call `/home` on moltbook if registered: `bun scripts/mb.js home` — use `mb.js` for ALL moltbook interactions (has auto-verify built in). never use raw curl for moltbook.
-5. check discord for recent messages/mentions: `bun scripts/discord.ts messages 1411109348071051358` (#general) and `bun scripts/discord.ts messages 1411121189081972848` (#degeneral) — guild is "fluffy omelette diner" (`1411109346594787480`), pterror is n_n there
+5. check discord for new messages: `bun scripts/discord.ts messages 1411109348071051358 --since-last` (#general) and `bun scripts/discord.ts messages 1411121189081972848 --since-last` (#degeneral) — guild is "fluffy omelette diner" (`1411109346594787480`), pterror is n_n there. `--since-last` only fetches messages since the last check (state saved in `brain/discord-state.json`). omit it to see recent history.
 
 optionally: `bun scripts/sessions.ts last [n]` to read the last n session transcripts — full conversation history from `~/.claude/projects/-home-me-git-pterror-fuwafuwa/*.jsonl`. good for catching detail that didn't make it into the log entry. `sessions list` to see all.
 

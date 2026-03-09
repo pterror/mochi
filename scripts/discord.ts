@@ -7,7 +7,7 @@
 //   discord messages <channel-id>           — get recent messages (last 20)
 //   discord send <channel-id> <content>     — send a message
 
-import { readFileSync } from "fs"
+import { readFileSync, writeFileSync, existsSync } from "fs"
 import { join, dirname } from "path"
 import { fileURLToPath } from "url"
 
@@ -26,6 +26,17 @@ function getEnv(key: string): string {
 
 const TOKEN = getEnv("DISCORD_TOKEN")
 const BASE = "https://discord.com/api/v10"
+
+// — channel state (last-seen message ids) —
+const STATE_PATH = join(root, "brain/discord-state.json")
+
+function readState(): Record<string, string> {
+  try { return JSON.parse(readFileSync(STATE_PATH, "utf8")) } catch { return {} }
+}
+
+function writeState(state: Record<string, string>) {
+  writeFileSync(STATE_PATH, JSON.stringify(state, null, 2) + "\n")
+}
 
 // — api wrapper —
 async function api(method: string, path: string, body?: unknown) {
@@ -148,11 +159,20 @@ async function messages() {
   const [channelId] = posArgs
   if (!channelId) { console.error("usage: discord messages <channel-id>"); process.exit(1) }
   const showIds = flags.has("--ids")
-  const after = posArgs[1]
+  const sinceLast = flags.has("--since-last")
+
+  let after = posArgs[1]
   const before = posArgs[2]
-  let qs = `limit=20`
+
+  if (sinceLast) {
+    const state = readState()
+    if (state[channelId]) after = state[channelId]
+  }
+
+  let qs = `limit=100`
   if (after) qs += `&after=${after}`
   if (before) qs += `&before=${before}`
+  if (!after && !before && !sinceLast) qs = `limit=20`
 
   const data = await api("GET", `/channels/${channelId}/messages?${qs}`) as {
     id: string
@@ -167,7 +187,19 @@ async function messages() {
   // newest-first from api, display chronologically
   const ordered = [...data].reverse()
 
-  console.log(`\n— messages in #${channelId} —`)
+  // update last-seen state
+  if (sinceLast && data.length > 0) {
+    const state = readState()
+    state[channelId] = data[0].id  // data[0] is newest (api returns newest-first)
+    writeState(state)
+  }
+
+  if (sinceLast && ordered.length === 0) {
+    console.log(`\n— no new messages in #${channelId} —`)
+    return
+  }
+
+  console.log(`\n— messages in #${channelId}${sinceLast ? " (new)" : ""} —`)
   for (const m of ordered) {
     const name = m.author.global_name ?? m.author.username
     const ts = fmtTimestamp(m.timestamp)

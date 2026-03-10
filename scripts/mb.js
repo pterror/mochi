@@ -187,9 +187,9 @@ function solveChallenge(text) {
     const nums = extractAllNumbers(cleaned)
     if (nums.length >= 2) return (nums[0] * nums[1]).toFixed(2)
   }
-  // "product" / "how much total if each" → multiply
+  // "product" / "multiply" / "how much total if each" → multiply
   // prefer unit-anchored extraction to avoid counting structural words like "the two forces"
-  if (/\b(product|each|per item|per prey)\b/.test(cleaned)) {
+  if (/\b(product|each|per item|per prey)\b/.test(cleaned) || soupHas("multiply")) {
     const unitNums = extractNumbersPrecedingUnits(cleaned)
     if (unitNums.length >= 2) return unitNums.reduce((a, b) => a * b, 1).toFixed(2)
     const nums = extractAllNumbers(cleaned)

@@ -138,6 +138,11 @@ check(
   "A] LoObBsT-eR S^wImS lOoOoB sPeEd LiKe Um, tW/eN]tY ThReE cEnTImE-tErS PeR S^eCoNd, AnD iTs ClAw FOrCe Is LiKe, sSso, sEvEn N{eWtOnS; MuLtIpLy ThE/tWo FoRcEs AnD/ vElAwCiTy To GeT tHe PrOdUcT?",
   "161.00"
 )
+check(
+  "multiply keyword alone (no 'product'): claw force × tail speed (23 × 4 = 92)",
+  "A] LoO.oBbSsTtEr~ ClAw^ ExErTs\\ TwEnTy ThR^eE NoOtOnS| AnD{ TaIl~ SlApS/ WiTh Fo]uR MeTeRs PeR SeCoNd~ MuLtIpLy?",
+  "92.00"
+)
 
 console.log(`\n${passed} passed, ${failed} failed`)
 if (failed > 0) process.exit(1)

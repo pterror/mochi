@@ -150,5 +150,11 @@ check(
   "75.00"
 )
 
+check(
+  "first-char substitution: 'G hHrEe' → three (twenty-three minus seven = 16)",
+  "A] lOoObbSssTtEr S^wIiMmSs/ aT- tW/eNnTy G hHrEe ] cEeMm EeTtEeR s PeR/ sEeCcoNnD, aNd- sLoWwS] bY^ sEeVvEeN { cEeMm EeTtEeR s PeR/ sEeCcoNnD, wHaT/ iS^ tHe- nEw] vEeLlOoCcIiTy?",
+  "16.00"
+)
+
 console.log(`\n${passed} passed, ${failed} failed`)
 if (failed > 0) process.exit(1)

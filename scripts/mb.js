@@ -238,12 +238,18 @@ function matchNumberChunk(tokens, wordsSorted, startIdx) {
       for (const word of wordsSorted) {
         const pattern = new RegExp("^" + word.split("").map(charPat).join(""))
         const m = soup.slice(pos).match(pattern)
-        if (m) {
+        // also try with first char substituted (handles e.g. "G hHrEe" → "three" where "t" is replaced)
+        const altPattern = word.length > 1
+          ? new RegExp("^." + word.slice(1).split("").map(charPat).join(""))
+          : null
+        const am = !m && altPattern ? soup.slice(pos).match(altPattern) : null
+        const match = m || am
+        if (match) {
           const val = NUMBER_WORDS[word]
           if (val === 1000 || val === 1000000) { current = current || 1; total += current * val; current = 0 }
           else if (val === 100) { current = (current || 1) * 100 }
           else { current += val }
-          pos += m[0].length; found = true; wordMatched = true; break
+          pos += match[0].length; found = true; wordMatched = true; break
         }
       }
       if (!wordMatched) break

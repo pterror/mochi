@@ -51,8 +51,8 @@ const now = Date.now()
 const moltbookDue = !state.lastMoltbookCheck || (now - state.lastMoltbookCheck) >= MOLTBOOK_INTERVAL_MS
 
 // — check discord (every run) —
-const discordGeneral = run("bun scripts/discord.ts messages 1411109348071051358 --since-last")
-const discordDegeneral = run("bun scripts/discord.ts messages 1411121189081972848 --since-last")
+const discordGeneral = run("bun scripts/discord.ts messages 1411109348071051358 --since-last --exclude-self")
+const discordDegeneral = run("bun scripts/discord.ts messages 1411121189081972848 --since-last --exclude-self")
 const hasNewDiscordGeneral = !discordGeneral.includes("no new messages")
 const hasNewDiscordDegeneral = !discordDegeneral.includes("no new messages")
 const hasDiscord = hasNewDiscordGeneral || hasNewDiscordDegeneral

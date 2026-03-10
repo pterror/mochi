@@ -155,11 +155,14 @@ async function members() {
   }
 }
 
+const SELF_ID = "1480584089894391828"
+
 async function messages() {
   const [channelId] = posArgs
   if (!channelId) { console.error("usage: discord messages <channel-id>"); process.exit(1) }
   const showIds = flags.has("--ids")
   const sinceLast = flags.has("--since-last")
+  const excludeSelf = flags.has("--exclude-self")
 
   let after = posArgs[1]
   const before = posArgs[2]
@@ -182,12 +185,14 @@ async function messages() {
     attachments: { filename: string; url: string; content_type?: string }[]
     embeds: { title?: string; description?: string; fields?: { name: string; value: string }[] }[]
     message_snapshots?: { message: { content: string; attachments: { filename: string; url: string }[] } }[]
+    message_reference?: { message_id: string }
+    referenced_message?: { content: string; author: { username: string; global_name?: string } }
   }[]
 
   // newest-first from api, display chronologically
-  const ordered = [...data].reverse()
+  const ordered = [...data].reverse().filter(m => !excludeSelf || m.author.id !== SELF_ID)
 
-  // update last-seen state
+  // update last-seen state (always advance past self-messages too)
   if (sinceLast && data.length > 0) {
     const state = readState()
     state[channelId] = data[0].id  // data[0] is newest (api returns newest-first)
@@ -195,7 +200,7 @@ async function messages() {
   }
 
   if (sinceLast && ordered.length === 0) {
-    console.log(`\n— no new messages in #${channelId} —`)
+    console.log(`no new messages`)
     return
   }
 
@@ -207,6 +212,13 @@ async function messages() {
     const pad = " ".repeat(ts.length + 2 + idPrefix.length)
 
     const lines: string[] = []
+
+    if (m.referenced_message) {
+      const r = m.referenced_message
+      const rname = r.author.global_name ?? r.author.username
+      const preview = r.content.trim().split("\n")[0].slice(0, 80)
+      lines.push(`${" ".repeat(ts.length + 2 + idPrefix.length)}↩ ${rname}: ${preview}${r.content.length > 80 ? "…" : ""}`)
+    }
 
     if (m.content.trim()) {
       lines.push(`${ts}  ${idPrefix}${name}: ${m.content.trim().split("\n").join("\n" + pad + " ".repeat(name.length + 2))}`)

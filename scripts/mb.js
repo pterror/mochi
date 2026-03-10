@@ -188,7 +188,10 @@ function solveChallenge(text) {
     if (nums.length >= 2) return (nums[0] * nums[1]).toFixed(2)
   }
   // "product" / "how much total if each" → multiply
+  // prefer unit-anchored extraction to avoid counting structural words like "the two forces"
   if (/\b(product|each|per item|per prey)\b/.test(cleaned)) {
+    const unitNums = extractNumbersPrecedingUnits(cleaned)
+    if (unitNums.length >= 2) return unitNums.reduce((a, b) => a * b, 1).toFixed(2)
     const nums = extractAllNumbers(cleaned)
     if (nums.length >= 2) return nums.reduce((a, b) => a * b, 1).toFixed(2)
   }
@@ -200,8 +203,14 @@ function solveChallenge(text) {
   throw new Error(`could not solve challenge: ${text}`)
 }
 
-// unit word patterns (with duplicate-letter tolerance) for force questions
-const UNIT_PATTERNS = ['nootons','newtons','neutons','nooton','newton','neuton','notons','noton']
+// unit word patterns (with duplicate-letter tolerance) for force/physics questions
+const UNIT_PATTERNS = [
+  'nootons','newtons','neutons','nooton','newton','neuton','notons','noton',  // force (newtons)
+  'centimeters','centimeter','centimetre','centimetres',                       // distance/velocity
+  'meters','meter','metres','metre',
+  'kilometers','kilometer','kilometres','kilometre',
+  'seconds','second','kilograms','kilogram',
+]
   .map(w => new RegExp('^' + w.split('').map(c => `${c}+`).join('') + '$'))
 
 // try to match tokens[startIdx..startIdx+size) as a single number value

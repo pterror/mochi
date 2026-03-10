@@ -133,5 +133,11 @@ check(
   "51.00"
 )
 
+check(
+  "product: 'multiply the two forces and velocity' — skip structural 'two', use unit-anchored (23 × 7 = 161)",
+  "A] LoObBsT-eR S^wImS lOoOoB sPeEd LiKe Um, tW/eN]tY ThReE cEnTImE-tErS PeR S^eCoNd, AnD iTs ClAw FOrCe Is LiKe, sSso, sEvEn N{eWtOnS; MuLtIpLy ThE/tWo FoRcEs AnD/ vElAwCiTy To GeT tHe PrOdUcT?",
+  "161.00"
+)
+
 console.log(`\n${passed} passed, ${failed} failed`)
 if (failed > 0) process.exit(1)

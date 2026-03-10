@@ -156,5 +156,16 @@ check(
   "16.00"
 )
 
+check(
+  "per strike: rate × count (20 × 3 = 60)",
+  "A] LoOoBbSsTtEeR^ ClAaW] ExErRtS~ TwEnTy NeOoOtToOnNs/ PeR| StRrIiKkEe Um, AnDd{ ThRrEe StRrIiKkEs< , WhAaT]S ToTtAaL^ FoRrCcEe?",
+  "60.00"
+)
+check(
+  "how far: distance = speed × time (17 m/s × 3s = 51)",
+  "A] lOoObBsTtEr S^wImS/ aTt SeVeNtEeN~ mE tErS| pE rS eCoNd} aNd/ sW iMs\\ fOr ThReE< sE cOnDs- , hOw{ fA r?",
+  "51.00"
+)
+
 console.log(`\n${passed} passed, ${failed} failed`)
 if (failed > 0) process.exit(1)

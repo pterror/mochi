@@ -179,6 +179,12 @@ function solveChallenge(text) {
       }
     }
   }
+  // "X per [action], N [action]s, total" → rate × count (e.g. "twenty neotons per strike, three strikes")
+  // must check before total keyword (which would otherwise add)
+  if (/\bper\b/.test(cleaned) && (/\b(total|combined|sum|altogether)\b/.test(cleaned) || soupHas("total") || soupHas("combined"))) {
+    const nums = extractAllNumbers(cleaned)
+    if (nums.length >= 2) return nums.reduce((a, b) => a * b, 1).toFixed(2)
+  }
   // "how much total" / "combined" / "sum" → add all numbers found
   // prefer unit-anchored extraction to avoid counting structural numbers ("one claw")
   if (/\b(total|combined|sum|altogether)\b/.test(cleaned) || soupHas("total") || soupHas("combined")) {
@@ -194,6 +200,11 @@ function solveChallenge(text) {
       || /slows?|reduces?|decreases?|loses?|loss/.test(soup)) {
     const nums = extractAllNumbers(cleaned)
     if (nums.length >= 2) return Math.abs(nums[0] - nums[1]).toFixed(2)
+  }
+  // "how far" → distance = speed × time (multiply)
+  if (/\bhow\s+far\b/.test(cleaned) || soupHas("howfar")) {
+    const nums = extractAllNumbers(cleaned)
+    if (nums.length >= 2) return (nums[0] * nums[1]).toFixed(2)
   }
   // "torque" → force × lever arm distance (multiply)
   if (soupHas("torque")) {

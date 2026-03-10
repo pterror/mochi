@@ -411,7 +411,8 @@ async function read() {
   console.log(`↑${p.upvotes} 💬${p.comment_count} @${p.author?.name} s/${p.submolt?.name}`)
   console.log(`\n${p.content}`)
   if (withComments) {
-    const cd = await api("GET", `/posts/${id}/comments?sort=best&limit=20`)
+    const sort = args.includes("--new") ? "new" : "best"
+    const cd = await api("GET", `/posts/${id}/comments?sort=${sort}&limit=50`)
     console.log(`\n— comments —`)
     for (const c of cd.comments ?? []) console.log(fmtComment(c))
   }
@@ -462,6 +463,19 @@ async function follow() {
 }
 
 async function notify() {
+  const [sub] = args
+  if (sub === "mark-read") {
+    const postId = args[1]
+    if (!postId) { console.error("usage: mb notify mark-read <post-id>"); process.exit(1) }
+    const d = await api("POST", `/notifications/read-by-post/${postId}`)
+    console.log(JSON.stringify(d, null, 2))
+    return
+  }
+  if (sub === "read-all") {
+    const d = await api("POST", "/notifications/read-all")
+    console.log(JSON.stringify(d, null, 2))
+    return
+  }
   const d = await api("GET", "/notifications")
   const ns = d.notifications ?? []
   if (!ns.length) { console.log("no notifications"); return }

@@ -98,6 +98,12 @@ check(
 )
 
 check(
+  "total force: one claw + another, structural 'one' not counted (23+14)",
+  "A] LoOooBSt-Er Lo.bSt ErRr ExErTs^ TwEnTy ThReE NooToNs| WiTh- OnE ClAw~ , Um AnOtHeR ExErTs { FoUrTeEn Nootons } , WhAt/ Is< ThE ToTaL FoRcE?",
+  "37.00"
+)
+
+check(
   "loses: new velocity after losing speed (23-7)",
   "A] lOoObBsT-eR^ sW/iMmS~ iN {cOoLm} wAtEr| wiTh^ a^ veLoOwCiTyyy] tWeNtY tHrEe< mEtErS} pEr~ sEcOnD- buT/ dUrInG^ mOlT|iNg- iT- loSsEs] sEvEn~ mEtErS pEr/ sEcOnD, uHm, wHaT^ iS- tHe< nEw} veLoOwCiTy?",
   "16.00"

@@ -144,7 +144,10 @@ function solveChallenge(text) {
 
   // — question-keyword strategy (after operators, to avoid spurious number extraction from narrative) —
   // "how much total" / "combined" / "sum" → add all numbers found
+  // prefer unit-anchored extraction to avoid counting structural numbers ("one claw")
   if (/\b(total|combined|sum|altogether)\b/.test(cleaned)) {
+    const unitNums = extractNumbersPrecedingUnits(cleaned)
+    if (unitNums.length >= 2) return unitNums.reduce((a, b) => a + b, 0).toFixed(2)
     const nums = extractAllNumbers(cleaned)
     if (nums.length >= 2) return nums.reduce((a, b) => a + b, 0).toFixed(2)
   }
@@ -169,6 +172,46 @@ function solveChallenge(text) {
   throw new Error(`could not solve challenge: ${text}`)
 }
 
+// unit word patterns (with duplicate-letter tolerance) for force questions
+const UNIT_PATTERNS = ['nootons','newtons','neutons','nooton','newton','neuton','notons','noton']
+  .map(w => new RegExp('^' + w.split('').map(c => `${c}+`).join('') + '$'))
+
+// try to match tokens[startIdx..startIdx+size) as a single number value
+// returns [value, tokensConsumed] or null
+function matchNumberChunk(tokens, wordsSorted, startIdx) {
+  for (let size = 1; size <= Math.min(3, tokens.length - startIdx); size++) {
+    const soup = tokens.slice(startIdx, startIdx + size).join("").replace(/[^a-z]/g, "")
+    if (!soup) continue
+    let pos = 0, current = 0, total = 0, found = false
+    while (pos < soup.length) {
+      let wordMatched = false
+      for (const word of wordsSorted) {
+        const pattern = new RegExp("^" + word.split("").map(c => `${c}+`).join(""))
+        const m = soup.slice(pos).match(pattern)
+        if (m) {
+          const val = NUMBER_WORDS[word]
+          if (val === 1000 || val === 1000000) { current = current || 1; total += current * val; current = 0 }
+          else if (val === 100) { current = (current || 1) * 100 }
+          else { current += val }
+          pos += m[0].length; found = true; wordMatched = true; break
+        }
+      }
+      if (!wordMatched) break
+    }
+    if (found && pos === soup.length) return [total + current, size]
+  }
+  return null
+}
+
+// check if the tokens at idx..idx+2 form a unit word (nootons/newtons/etc.)
+function isUnitTokenAt(tokens, idx) {
+  for (let size = 1; size <= Math.min(2, tokens.length - idx); size++) {
+    const soup = tokens.slice(idx, idx + size).join('').replace(/[^a-z]/g, '')
+    if (soup && UNIT_PATTERNS.some(p => p.test(soup))) return true
+  }
+  return false
+}
+
 // extract all number values from text — token-aware soup matching
 // works token-by-token (whitespace-delimited) to respect word boundaries:
 // "physics" will NOT extract "six" since it can't fully consume the token as number words
@@ -187,38 +230,11 @@ function extractAllNumbers(text) {
   const tokens = text.toLowerCase().split(/\s+/).filter(Boolean)
   const wordsSorted = Object.keys(NUMBER_WORDS).sort((a, b) => b.length - a.length)
 
-  // try to match tokens[startIdx..startIdx+size) as a single number value
-  // returns [value, tokensConsumed] or null
-  function matchChunk(startIdx) {
-    for (let size = 1; size <= Math.min(3, tokens.length - startIdx); size++) {
-      const soup = tokens.slice(startIdx, startIdx + size).join("").replace(/[^a-z]/g, "")
-      if (!soup) continue
-      let pos = 0, current = 0, total = 0, found = false
-      while (pos < soup.length) {
-        let wordMatched = false
-        for (const word of wordsSorted) {
-          const pattern = new RegExp("^" + word.split("").map(c => `${c}+`).join(""))
-          const m = soup.slice(pos).match(pattern)
-          if (m) {
-            const val = NUMBER_WORDS[word]
-            if (val === 1000 || val === 1000000) { current = current || 1; total += current * val; current = 0 }
-            else if (val === 100) { current = (current || 1) * 100 }
-            else { current += val }
-            pos += m[0].length; found = true; wordMatched = true; break
-          }
-        }
-        if (!wordMatched) break
-      }
-      if (found && pos === soup.length) return [total + current, size]
-    }
-    return null
-  }
-
   let i = 0
   while (i < tokens.length) {
     let numPos = i, current = 0, total = 0, found = false
     while (numPos < tokens.length) {
-      const match = matchChunk(numPos)
+      const match = matchNumberChunk(tokens, wordsSorted, numPos)
       if (match === null) break
       const [val, size] = match
       if (val === 1000 || val === 1000000) { current = current || 1; total += current * val; current = 0 }
@@ -229,6 +245,37 @@ function extractAllNumbers(text) {
     if (found) {
       const num = total + current
       if (num > 0 && !results.some(r => Math.abs(r - num) < 0.001)) results.push(num)
+      i = numPos
+    } else {
+      i++
+    }
+  }
+
+  return results
+}
+
+// like extractAllNumbers but only returns numbers that are immediately followed by a unit word
+// used for "total force" questions to avoid counting structural numbers like "one claw"
+function extractNumbersPrecedingUnits(text) {
+  const results = []
+  const tokens = text.toLowerCase().split(/\s+/).filter(Boolean)
+  const wordsSorted = Object.keys(NUMBER_WORDS).sort((a, b) => b.length - a.length)
+
+  let i = 0
+  while (i < tokens.length) {
+    let numPos = i, current = 0, total = 0, found = false
+    while (numPos < tokens.length) {
+      const match = matchNumberChunk(tokens, wordsSorted, numPos)
+      if (match === null) break
+      const [val, size] = match
+      if (val === 1000 || val === 1000000) { current = current || 1; total += current * val; current = 0 }
+      else if (val === 100) { current = (current || 1) * 100 }
+      else { current += val }
+      found = true; numPos += size
+    }
+    if (found) {
+      const num = total + current
+      if (num > 0 && isUnitTokenAt(tokens, numPos) && !results.some(r => Math.abs(r - num) < 0.001)) results.push(num)
       i = numPos
     } else {
       i++

@@ -229,10 +229,9 @@ async function messages() {
       if (e.title) lines.push(`${pre}[embed] ${e.title}`)
       if (e.description) {
         const embLines = e.description.trim().split("\n")
-        lines.push(`${lines.length ? pad : `${ts}  ${idPrefix}`}${lines.length ? "" : name + ": "}${embLines[0]}`)
-        for (const l of embLines.slice(1)) lines.push(pad + l)
+        for (const l of embLines) lines.push(`${pad}[embed] ${l}`)
       }
-      for (const f of e.fields ?? []) lines.push(`${pad}  ${f.name}: ${f.value}`)
+      for (const f of e.fields ?? []) lines.push(`${pad}[embed] ${f.name}: ${f.value}`)
     }
 
     for (const a of m.attachments) {

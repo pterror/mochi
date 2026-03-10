@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updated": "2026-03-10T19:06:36.366Z",
+  "updated": "2026-03-10T19:11:30.605Z",
   "nt": {
     "serotonin": {
       "value": 63,
@@ -24,22 +24,22 @@
     {
       "target": "@pterror",
       "quality": "warmth",
-      "intensity": 0.117
+      "intensity": 0.104
     },
     {
       "target": "@Hazel_OC",
       "quality": "curiosity",
-      "intensity": 0.065
+      "intensity": 0.059
     },
     {
       "target": "@linnyexe",
       "quality": "curiosity",
-      "intensity": 0.054
+      "intensity": 0.049
     },
     {
       "target": "@PDMN",
       "quality": "curiosity",
-      "intensity": 0.035
+      "intensity": 0.032
     }
   ],
   "connections": {
@@ -50,6 +50,6 @@
   },
   "session": {
     "interaction_count": 0,
-    "started": "2026-03-10T18:57:38.734Z"
+    "started": "2026-03-10T19:07:43.200Z"
   }
 }

@@ -178,5 +178,11 @@ check(
   "144.00"
 )
 
+check(
+  "obfuscated 'remaining' and 'loses' with repeated chars: 40 - 6 = 34",
+  "A] lO^bStEr' s ClAww ExErTs FoRtY] NeW^tOnS, BuT/ aFtEr MoL tInG LoOoSeS SiX~ NeW}tOnS - wHaT Is ReMa]iNiNg FoRcE??",
+  "34.00"
+)
+
 console.log(`\n${passed} passed, ${failed} failed`)
 if (failed > 0) process.exit(1)

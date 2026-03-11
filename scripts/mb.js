@@ -231,7 +231,8 @@ function solveChallenge(text) {
   // soup-based match handles obfuscation that splits words (e.g. "SlO^wS" → "slo ws")
   if (/\b(difference|how much more|how much less|how much remain|left over|remaining)\b/.test(cleaned)
       || /waterresistance|airresistance/.test(soup)
-      || /slows?|reduces?|decreases?|loses?|loss/.test(soup)) {
+      || /slows?|reduces?|decreases?|loses?|loss/.test(soup)
+      || soupHas("remaining") || soupHas("loses") || soupHas("slows") || soupHas("reduces") || soupHas("decreases")) {
     const nums = extractAllNumbers(cleaned)
     if (nums.length >= 2) return Math.abs(nums[0] - nums[1]).toFixed(2)
   }

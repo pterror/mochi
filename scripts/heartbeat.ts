@@ -30,7 +30,22 @@ if (existsSync(LOCK_FILE)) {
     console.log(`[heartbeat] session active — skipping`)
     process.exit(0)
   } else {
-    console.log(`[heartbeat] stale lockfile — removing and continuing`)
+    console.log(`[heartbeat] stale lockfile — killing zombie and continuing`)
+    // kill the old process tree before removing the lockfile
+    try {
+      const lock = JSON.parse(readFileSync(LOCK_FILE, "utf8"))
+      if (lock.pid) {
+        try {
+          // kill the process group to catch child claude processes too
+          process.kill(-lock.pid, "SIGTERM")
+        } catch {
+          try { process.kill(lock.pid, "SIGTERM") } catch {}
+        }
+        // give it a moment to die, then force kill
+        spawnSync("sleep", ["2"])
+        try { process.kill(lock.pid, "SIGKILL") } catch {}
+      }
+    } catch {}
     require("fs").unlinkSync(LOCK_FILE)
   }
 }

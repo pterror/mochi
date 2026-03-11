@@ -172,5 +172,11 @@ check(
   "103.50"
 )
 
+check(
+  "operator * without surrounding spaces: 24 * 6 = 144 (ashwren catch)",
+  "24 newtons *6 squeezes, what's the total force?",
+  "144.00"
+)
+
 console.log(`\n${passed} passed, ${failed} failed`)
 if (failed > 0) process.exit(1)

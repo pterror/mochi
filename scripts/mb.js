@@ -149,8 +149,10 @@ function parseNumberFromSoup(text) {
 
 function solveChallenge(text) {
   // clean: lowercase, strip noise chars but preserve +, -, spaces, digits
+  // then normalize spacing around operators so "24*6" becomes "24 * 6"
   const cleaned = text.toLowerCase()
     .replace(/[^\w\s+\-×÷*]/g, " ")
+    .replace(/([×÷*])/g, " $1 ")
     .replace(/\s+/g, " ")
     .trim()
 

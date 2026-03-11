@@ -196,5 +196,11 @@ check(
   "34.00"
 )
 
+check(
+  "mid-word char insertion: 'tHrIrTy' (extra r) = thirty two + fifteen = 47",
+  "A] LoB-sT eR| ClAw^ FoRcE- ExErTs/ tHrIrTy\\ TwO {nEu-TonS} umm, aNd~ ItS// SwIm- VelOoOcItY| Is/ FiFtEeN <meTeRs> PeR\\ SeCoNd, So^ WhAt] Is- tHe/ SuM?",
+  "47.00"
+)
+
 console.log(`\n${passed} passed, ${failed} failed`)
 if (failed > 0) process.exit(1)

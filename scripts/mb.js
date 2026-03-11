@@ -215,7 +215,9 @@ function solveChallenge(text) {
   }
   // "X per [action], N [action]s, total" → rate × count (e.g. "twenty neotons per strike, three strikes")
   // must check before total keyword (which would otherwise add)
-  if (/\bper\b/.test(cleaned) && (/\b(total|combined|sum|altogether)\b/.test(cleaned) || soupHas("total") || soupHas("combined"))) {
+  // exclude "per second/minute/hour/meter" — those are unit rates, not operational "per"
+  const perIsRate = /\bper\b/.test(cleaned) && !/\bper\s+(second|seconds|minute|minutes|hour|hours|meter|meters|metre|metres|kilogram|kilograms)\b/.test(cleaned)
+  if (perIsRate && (/\b(total|combined|sum|altogether)\b/.test(cleaned) || soupHas("total") || soupHas("combined"))) {
     const nums = extractAllNumbers(cleaned)
     if (nums.length >= 2) return nums.reduce((a, b) => a * b, 1).toFixed(2)
   }
@@ -298,7 +300,13 @@ function matchNumberChunk(tokens, wordsSorted, startIdx) {
             ? new RegExp("^." + word.slice(1).split("").map(charPat).join(""))
             : null
           const am = !m && altPattern ? soup.slice(pos).match(altPattern) : null
-          const match = m || am
+          // tolerant pattern: allow single inserted char between character groups
+          // handles mid-word insertions like "thrirty" → "thirty" (extra 'r' after 'h')
+          const tolPattern = !m && !am && word.length > 2
+            ? new RegExp("^" + word.split("").map(charPat).join(".??"))
+            : null
+          const tm = tolPattern ? soup.slice(pos).match(tolPattern) : null
+          const match = m || am || tm
           if (match) {
             const val = NUMBER_WORDS[word]
             if (val === 1000 || val === 1000000) { current = current || 1; total += current * val; current = 0 }

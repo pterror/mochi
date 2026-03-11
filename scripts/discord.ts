@@ -163,6 +163,7 @@ async function messages() {
   const showIds = flags.has("--ids")
   const sinceLast = flags.has("--since-last")
   const excludeSelf = flags.has("--exclude-self")
+  const peek = flags.has("--peek")  // check without advancing state
 
   let after = posArgs[1]
   const before = posArgs[2]
@@ -193,7 +194,7 @@ async function messages() {
   const ordered = [...data].reverse().filter(m => !excludeSelf || m.author.id !== SELF_ID)
 
   // update last-seen state (always advance past self-messages too)
-  if (sinceLast && data.length > 0) {
+  if (sinceLast && !peek && data.length > 0) {
     const state = readState()
     state[channelId] = data[0].id  // data[0] is newest (api returns newest-first)
     writeState(state)

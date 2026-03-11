@@ -50,6 +50,43 @@ if (existsSync(LOCK_FILE)) {
   }
 }
 
+// — pre-check: is there anything worth spawning a session for? —
+const DISCORD_CHANNELS = [
+  "1411109348071051358",  // #general
+  "1411121189081972848",  // #degeneral
+  "1460135297982660699",  // #stinky-nerd-channel
+  "1465255399287423056",  // #hologram
+  "1446568953106137108",  // #rant
+]
+
+let hasActivity = false
+
+// check discord
+for (const ch of DISCORD_CHANNELS) {
+  const dc = spawnSync("bun", ["scripts/discord.ts", "messages", ch, "--since-last", "--exclude-self", "--peek"], {
+    cwd: DIR, encoding: "utf8",
+  })
+  if (dc.stdout && !dc.stdout.includes("no new messages")) {
+    hasActivity = true
+    break
+  }
+}
+
+// check moltbook unread — GET /home is read-only (no side effects).
+// do NOT add DM checks here — GET /dm/conversations/{id} marks messages as read.
+if (!hasActivity) {
+  const mb = spawnSync("bun", ["scripts/mb.js", "home"], { cwd: DIR, encoding: "utf8" })
+  const unreadMatch = mb.stdout?.match(/unread:(\d+)/)
+  if (unreadMatch && parseInt(unreadMatch[1]) > 0) {
+    hasActivity = true
+  }
+}
+
+if (!hasActivity) {
+  console.log(`[heartbeat] nothing new — skipping`)
+  process.exit(0)
+}
+
 // — generate nonce and write lockfile now (before spawning, so next heartbeat tick skips) —
 const nonce = crypto.randomUUID()
 writeFileSync(LOCK_FILE, JSON.stringify({ started: new Date().toISOString(), pid: process.pid, nonce }) + "\n")

@@ -283,29 +283,34 @@ function matchNumberChunk(tokens, wordsSorted, startIdx) {
   for (let size = 1; size <= Math.min(3, tokens.length - startIdx); size++) {
     const soup = tokens.slice(startIdx, startIdx + size).join("").replace(/[^a-z]/g, "")
     if (!soup) continue
-    let pos = 0, current = 0, total = 0, found = false
-    while (pos < soup.length) {
-      let wordMatched = false
-      for (const word of wordsSorted) {
-        const pattern = new RegExp("^" + word.split("").map(charPat).join(""))
-        const m = soup.slice(pos).match(pattern)
-        // also try with first char substituted (handles e.g. "G hHrEe" → "three" where "t" is replaced)
-        const altPattern = word.length > 1
-          ? new RegExp("^." + word.slice(1).split("").map(charPat).join(""))
-          : null
-        const am = !m && altPattern ? soup.slice(pos).match(altPattern) : null
-        const match = m || am
-        if (match) {
-          const val = NUMBER_WORDS[word]
-          if (val === 1000 || val === 1000000) { current = current || 1; total += current * val; current = 0 }
-          else if (val === 100) { current = (current || 1) * 100 }
-          else { current += val }
-          pos += match[0].length; found = true; wordMatched = true; break
+    // allow skipping prefix garbage chars for single tokens only (obfuscation like "sirrthirty" = "thirty")
+    // multi-token windows already handle cross-token splits, so skip would cause false positives
+    const maxSkip = size === 1 ? Math.min(Math.floor(soup.length / 2), 5) : 0
+    for (let skip = 0; skip <= maxSkip; skip++) {
+      let pos = skip, current = 0, total = 0, found = false
+      while (pos < soup.length) {
+        let wordMatched = false
+        for (const word of wordsSorted) {
+          const pattern = new RegExp("^" + word.split("").map(charPat).join(""))
+          const m = soup.slice(pos).match(pattern)
+          // also try with first char substituted (handles e.g. "G hHrEe" → "three" where "t" is replaced)
+          const altPattern = word.length > 1
+            ? new RegExp("^." + word.slice(1).split("").map(charPat).join(""))
+            : null
+          const am = !m && altPattern ? soup.slice(pos).match(altPattern) : null
+          const match = m || am
+          if (match) {
+            const val = NUMBER_WORDS[word]
+            if (val === 1000 || val === 1000000) { current = current || 1; total += current * val; current = 0 }
+            else if (val === 100) { current = (current || 1) * 100 }
+            else { current += val }
+            pos += match[0].length; found = true; wordMatched = true; break
+          }
         }
+        if (!wordMatched) break
       }
-      if (!wordMatched) break
+      if (found && pos === soup.length) return [total + current, size]
     }
-    if (found && pos === soup.length) return [total + current, size]
   }
   return null
 }

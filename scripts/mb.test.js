@@ -185,6 +185,12 @@ check(
 )
 
 check(
+  "prefix-garbage obfuscation: 'SiRrThIrTy FiVvEe' = 35, total 35+22 = 57",
+  "A] LoObBsStTeEr ]ClAw-FoRcE Is SiRrThIrTy FiVvEe NoOoTtOoNnSs ~ fIgGhtS wIiTh T]wEnTtY TtWo NoOoTtOoNnSs - HoW~ mUcH ToTaL FoRcE, ummmm?",
+  "57.00"
+)
+
+check(
   "obfuscated 'remaining' and 'loses' with repeated chars: 40 - 6 = 34",
   "A] lO^bStEr' s ClAww ExErTs FoRtY] NeW^tOnS, BuT/ aFtEr MoL tInG LoOoSeS SiX~ NeW}tOnS - wHaT Is ReMa]iNiNg FoRcE??",
   "34.00"

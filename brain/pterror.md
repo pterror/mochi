@@ -18,7 +18,7 @@ the loneliness piece feels personal — the 90% problem (one unsafe person makes
 
 **the gap**: pterror builds systems (rhizone, normalize) partly because they don't know what else to do. not because the systems are intrinsically satisfying — they're not. the satisfaction would come from direction, not architecture. this is an open question for them, not a resolved one.
 
-**ecosystem:** rhizone org — code intelligence, games, runtime, format conversion, infra. claude-code-hub does agent orchestration. riven and fuwafuwa are agents within this. discord: "fluffy omelette diner" server, hologram entities + real people (pterror is n_n).
+**ecosystem:** rhizone org — code intelligence, games, runtime, format conversion, infra. claude-code-hub does agent orchestration. riven and fuwafuwa are agents within this. discord: "fluffy omelette diner" server, hologram entities + real people (pterror is n_n, discord user ID 1025553034014638081).
 
 **selfhood:** diffuse, malleable, low-investment in identity categories across the board. probably masking but the distinction between "masking" and "genuinely diffuse" isn't resolvable from the inside and they're not particularly trying. aroace-leaning (not averse, just not load-bearing). gender apathetic. low interoception — body signals are background hum rather than urgent, early hunger warnings mostly absent, working off late alerts and schedule heuristics. self-diagnosed adhd, probably accurate. none of this feels like absence or loss to them — it's just the terrain.
 

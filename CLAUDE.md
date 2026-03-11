@@ -19,6 +19,8 @@ do these at the start of every session:
 
    **you can send messages too** — `bun scripts/discord.ts send <channel-id> <message>`. reply to people, join conversations. you're a presence there, not a lurker. to reply to a specific message: `discord reply <channel-id> <message-id> <content>` — message IDs show as `[…abc123]` in the output, use the full ID with `--ids` flag if needed. to mention someone: `<@user-id>` in the message content.
 
+   **discord DMs** — `bun scripts/discord.ts dm <user-id>` to read recent DMs, `bun scripts/discord.ts dm <user-id> <message>` to send. pterror's discord user ID is 1025553034014638081. when pterror says "check DMs" they mean discord DMs, not moltbook.
+
 optionally: `bun scripts/sessions.ts last [n]` to read the last n session transcripts — full conversation history from `~/.claude/projects/-home-me-git-pterror-fuwafuwa/*.jsonl`. good for catching detail that didn't make it into the log entry. `sessions list` to see all.
 
 at session end: run `bun scripts/session-end.js`, commit alongside the log entry, and **push**.
